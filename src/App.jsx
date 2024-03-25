@@ -1,11 +1,13 @@
 import { useCallback, useRef, useState } from "react";
 import { Canvas, Node } from "reaflow";
 import { storedEdges, storedNodes } from "./data";
+import DetailsModal from "./components/modal/DetailsModal";
 
 function App() {
   const [nodes, setNodes] = useState(storedNodes);
   const [edges, setEdges] = useState(storedEdges);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [editedNode, setEditedNode] = useState(null);
 
@@ -20,6 +22,9 @@ function App() {
   const handleModalClose = (event) => {
     setIsModalOpen(false);
   };
+  const handleEditModalClose = (event) => {
+    setIsEditOpen(false);
+  };
 
   const handleNodeRemove = (event) => {
     const newNodes = nodes.filter((item) => !item.id.startsWith(editedNode.id));
@@ -27,6 +32,11 @@ function App() {
     setNodes(newNodes);
     setEdges(newEdges);
     setIsModalOpen(false);
+  };
+
+  const handleNodeAdd = () => {
+    setIsModalOpen(false);
+    setIsEditOpen(true);
   };
 
   return (
@@ -58,17 +68,37 @@ function App() {
             }}
           >
             <div>
-              <button style={{ float: "right" }} onClick={handleModalClose}>
+              <button
+                style={{
+                  float: "right",
+                  marginTop: "10px",
+                  marginRight: "10px",
+                }}
+                onClick={handleModalClose}
+              >
                 X
               </button>
             </div>
-            <section>{editedNode.data}</section>
-            <section>
-              <button onClick={handleNodeRemove}>Remove</button>
-              <button onClick={handleNodeRemove}>Add node</button>
+            <section style={{ marginLeft: "10px", marginBottom: "10px" }}>
+              {editedNode.data}
+            </section>
+            <section style={{ marginLeft: "10px", marginBottom: "10px" }}>
+              <button
+                onClick={handleNodeRemove}
+                style={{ marginRight: "10px" }}
+              >
+                Remove
+              </button>
+              <button onClick={handleNodeAdd}>Add node</button>
             </section>
           </div>
         </div>
+      )}
+      {isEditOpen && (
+        <DetailsModal
+          mousePosition={mousePosition}
+          handleModalClose={handleEditModalClose}
+        />
       )}
     </div>
   );
