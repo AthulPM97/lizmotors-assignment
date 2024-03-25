@@ -1,15 +1,19 @@
 import { useState } from "react";
+import "./DetailsModal.css";
 
 const DetailsModal = (props) => {
-  const { mousePosition, handleModalClose } = props;
+  const { mousePosition, handleModalClose, handleNodeSubmit } = props;
 
-  const [text, setText] = useState("")
-  const [description, setDescription] = useState("")
+  const [text, setText] = useState("");
+  const [description, setDescription] = useState("");
 
   const handleNodeAdd = (event) => {
-    console.log("add node", event)
-    console.log("text ", text)
-  }
+    const userInput = {
+        text,
+        data: description
+    }
+    handleNodeSubmit(userInput)
+  };
   return (
     <div
       style={{
@@ -18,24 +22,25 @@ const DetailsModal = (props) => {
         top: mousePosition.y,
       }}
     >
-      <div
-        style={{
-          width: "18rem",
-          background: "grey",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+      <div className="card">
         <div>
-          <button style={{ float: "right" }} onClick={handleModalClose()}>
+          <button className="close-btn" onClick={handleModalClose}>
             X
           </button>
         </div>
-        <section>
-          <input type="text" placeholder="Enter text" onChange={(e) => setText(e.target)} />
-          <input type="text" placeholder="Enter description" />
+        <section className="text-box">
+          <input
+            type="text"
+            placeholder="Enter text"
+            onChange={(e) => setText(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Enter description"
+            onChange={(e) => setDescription(e.target.value)}
+          />
         </section>
-        <section>
+        <section className="submit-btn">
           <button onClick={handleNodeAdd}>Add node</button>
         </section>
       </div>

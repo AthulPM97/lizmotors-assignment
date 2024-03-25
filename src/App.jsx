@@ -39,6 +39,27 @@ function App() {
     setIsEditOpen(true);
   };
 
+  const handleNodeSubmission = (userInput) => {
+    // id of new node will be count of edge + 1
+    let nodeCount = 0;
+    edges.forEach((edge) => {
+      if (edge.from === editedNode.id) nodeCount++;
+    });
+    // create a new node
+    const newNode = {
+      id: `${editedNode.id}-${nodeCount + 1}`,
+      ...userInput,
+    };
+    setNodes([...nodes, newNode]);
+    // create a new edge relationship
+    const newEdge = {
+      id: newNode.id,
+      from: editedNode.id,
+      to: newNode.id,
+    };
+    setEdges([...edges, newEdge]);
+  };
+
   return (
     <div>
       <Canvas
@@ -98,6 +119,7 @@ function App() {
         <DetailsModal
           mousePosition={mousePosition}
           handleModalClose={handleEditModalClose}
+          handleNodeSubmit={handleNodeSubmission}
         />
       )}
     </div>

@@ -1,0 +1,22 @@
+.close-btn {
+    margin-top: 10px;
+    margin-right: 10px;
+    float: right;
+}
+
+.text-box {
+    margin-left: 10px;
+}
+
+.submit-btn {
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.card {
+    width: 18rem;
+    background: gray;
+    display: flex;
+    flex-direction: column;
+}
