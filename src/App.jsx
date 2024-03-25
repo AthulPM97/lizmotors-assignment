@@ -1,96 +1,31 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Canvas, Node } from "reaflow";
+import { storedEdges, storedNodes } from "./data";
 
 function App() {
+  const [nodes, setNodes] = useState(storedNodes);
+  const [edges, setEdges] = useState(storedEdges);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [editedNode, setEditedNode] = useState(null);
+
   const canvasRef = useRef(null);
 
-  useEffect(() => {
-    // canvasRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" })
-    // console.log(canvasRef);
-  }, []);
-  const nodes = [
-    {
-      id: "1",
-      text: "root",
-    },
-    {
-      id: "1-1",
-      text: "Research",
-    },
-    {
-      id: "1-2",
-      text: "planning",
-    },
-    {
-      id: "1-3",
-      text: "designing",
-    },
-    {
-      id: "1-4",
-      text: "manufacturing",
-    },
-    {
-      id: "1-5",
-      text: "Sales/Marketing",
-    },
-    {
-      id: "1-1-1",
-      text: "External",
-    },
-    {
-      id: "1-1-2",
-      text: "Internal",
-    },
-  ];
-
-  const edges = [
-    {
-      id: "1-1",
-      from: "1",
-      to: "1-1",
-    },
-    {
-      id: "1-2",
-      from: "1",
-      to: "1-2",
-    },
-    {
-      id: "1-3",
-      from: "1",
-      to: "1-3",
-    },
-    {
-      id: "1-4",
-      from: "1",
-      to: "1-4",
-    },
-    {
-      id: "1-5",
-      from: "1",
-      to: "1-5",
-    },
-    {
-      id: "1-1-1",
-      from: "1-1",
-      to: "1-1-1",
-    },
-    {
-      id: "1-1-2",
-      from: "1-1",
-      to: "1-1-2",
-    },
-  ];
-
   const handleMouseEnter = useCallback((event, node) => {
-    console.log("event ", node);
     setMousePosition({ x: event.clientX, y: event.clientY });
-
+    setEditedNode(node);
     setIsModalOpen(true);
   }, []);
 
   const handleModalClose = (event) => {
+    setIsModalOpen(false);
+  };
+
+  const handleNodeRemove = (event) => {
+    const newNodes = nodes.filter((item) => !item.id.startsWith(editedNode.id));
+    const newEdges = edges.filter((item) => !item.id.startsWith(editedNode.id));
+    setNodes(newNodes);
+    setEdges(newEdges);
     setIsModalOpen(false);
   };
 
@@ -114,12 +49,24 @@ function App() {
             top: mousePosition.y,
           }}
         >
-          <div className="modal-content">
-            <span className="close-btn" onClick={handleModalClose}>
-              ×
-            </span>
-            <h2>Modal Title</h2>
-            <p>Modal Content</p>
+          <div
+            style={{
+              width: "18rem",
+              background: "grey",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <div>
+              <button style={{ float: "right" }} onClick={handleModalClose}>
+                X
+              </button>
+            </div>
+            <section>{editedNode.data}</section>
+            <section>
+              <button onClick={handleNodeRemove}>Remove</button>
+              <button onClick={handleNodeRemove}>Add node</button>
+            </section>
           </div>
         </div>
       )}
